@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Create Account - {{ shop_name }}{% endblock %}
+{% block content %}
+<div class="login-wrapper">
+    <div class="auth-split">
+        <div class="auth-brand-panel">
+            <div>
+                <div class="brand-title">ShopKeeper</div>
+                <div class="brand-tag">Inventory &amp; Billing for Local Shops</div>
+            </div>
+            {% include "_store_illustration.html" %}
+            <div class="brand-footer">
+                {% if is_first_account %}
+                    Set up your shop's owner account — this only happens once.
+                {% else %}
+                    Joining an existing shop? Create your own login below.
+                {% endif %}
+            </div>
+        </div>
+        <div class="auth-form-panel">
+            <h3 class="mb-1">Create account</h3>
+            <p class="text-muted mb-4">
+                {% if is_first_account %}
+                    Let's get your shop set up.
+                {% else %}
+                    Set up your login below.
+                {% endif %}
+            </p>
+            <form method="POST" autocomplete="off">
+                <div class="mb-3">
+                    <label class="form-label">Shop Name</label>
+                    <input type="text" name="shop_name" class="form-control" placeholder="e.g. Sharma General Store" autofocus autocomplete="off">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Choose a Username</label>
+                    <input type="text" name="username" class="form-control" required autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Choose a Password</label>
+                    <input type="password" name="password" class="form-control" required autocomplete="new-password">
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">Confirm Password</label>
+                    <input type="password" name="confirm_password" class="form-control" required autocomplete="new-password">
+                </div>
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-check-lg"></i> Create Account
+                </button>
+            </form>
+            {% if not is_first_account %}
+            <p class="text-muted small text-center mt-4 mb-0">
+                Already have an account? <a href="{{ url_for('auth.login') }}">Log in</a>
+            </p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

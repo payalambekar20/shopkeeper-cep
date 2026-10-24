@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Expenses - {{ shop_name }}{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+    <h4 class="mb-0">Expenses</h4>
+    <div class="btn-group">
+        <a href="{{ url_for('expenses.list_expenses', days=7) }}" class="btn btn-sm {% if days == '7' %}btn-primary{% else %}btn-outline-primary{% endif %}">7 Days</a>
+        <a href="{{ url_for('expenses.list_expenses', days=30) }}" class="btn btn-sm {% if days == '30' %}btn-primary{% else %}btn-outline-primary{% endif %}">30 Days</a>
+        <a href="{{ url_for('expenses.list_expenses', days='all') }}" class="btn btn-sm {% if days == 'all' %}btn-primary{% else %}btn-outline-primary{% endif %}">All Time</a>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-body">
+                <div class="text-muted small">Total in this period</div>
+                <div class="h3 mb-0 text-danger">{{ total | inr }}</div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title">Log an Expense</h6>
+                <form method="POST" action="{{ url_for('expenses.add_expense') }}">
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <input type="text" name="description" class="form-control" placeholder="e.g. Electricity bill, Ramesh delivery charge" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Category</label>
+                        <select name="category" class="form-select">
+                            {% for c in categories %}
+                            <option value="{{ c }}">{{ c }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Amount (₹)</label>
+                        <input type="number" step="0.01" min="0.01" name="amount" class="form-control" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Date</label>
+                        <input type="date" name="expense_date" class="form-control" value="{{ today_str }}">
+                        <div class="form-text">Leave as today, or backdate it if you're logging an old expense.</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100"><i class="bi bi-plus-lg"></i> Add Expense</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Category</th>
+                            <th class="text-end">Amount</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for e in expenses %}
+                        <tr>
+                            <td>{{ e.expense_date.strftime('%d %b %Y') }}</td>
+                            <td>{{ e.description }}</td>
+                            <td><span class="badge bg-light text-dark border">{{ e.category }}</span></td>
+                            <td class="text-end text-danger">{{ e.amount | inr }}</td>
+                            <td class="text-end">
+                                <form method="POST" action="{{ url_for('expenses.delete_expense', expense_id=e.id) }}" class="d-inline"
+                                      onsubmit="return confirm('Delete this expense?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="5" class="text-center text-muted py-4">No expenses logged in this period.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

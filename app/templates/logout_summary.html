@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Day's Summary - {{ shop_name }}{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+        <div class="text-center mb-4">
+            <i class="bi bi-moon-stars display-4 text-primary"></i>
+            <h4 class="mt-2 mb-0">Closing Up?</h4>
+            <p class="text-muted small">Here's how today and this month have gone so far.</p>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-body">
+                <h6 class="card-title mb-3">Today</h6>
+                <div class="d-flex justify-content-between"><span class="text-muted">Sales</span><span>{{ today_pl.sales | inr }}</span></div>
+                <div class="d-flex justify-content-between"><span class="text-muted">Bills</span><span>{{ today_pl.bill_count }}</span></div>
+                <div class="d-flex justify-content-between"><span class="text-muted">Expenses</span><span class="text-danger">- {{ today_pl.expenses | inr }}</span></div>
+                <hr>
+                <div class="d-flex justify-content-between fs-4 fw-semibold">
+                    <span>Net Profit</span>
+                    <span class="{% if today_pl.profit >= 0 %}text-success{% else %}text-danger{% endif %}">{{ today_pl.profit | inr }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body">
+                <h6 class="card-title mb-3">This Month</h6>
+                <div class="d-flex justify-content-between"><span class="text-muted">Sales</span><span>{{ month_pl.sales | inr }}</span></div>
+                <div class="d-flex justify-content-between"><span class="text-muted">Expenses</span><span class="text-danger">- {{ month_pl.expenses | inr }}</span></div>
+                <hr>
+                <div class="d-flex justify-content-between fs-5 fw-semibold">
+                    <span>Net Profit</span>
+                    <span class="{% if month_pl.profit >= 0 %}text-success{% else %}text-danger{% endif %}">{{ month_pl.profit | inr }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex gap-2">
+            <a href="{{ url_for('dashboard.home') }}" class="btn btn-outline-secondary w-50">
+                <i class="bi bi-arrow-left"></i> Back to Dashboard
+            </a>
+            <form method="POST" action="{{ url_for('auth.logout_confirm') }}" class="w-50">
+                <button type="submit" class="btn btn-danger w-100">
+                    <i class="bi bi-box-arrow-right"></i> Confirm Logout
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - {{ shop_name }}{% endblock %}
+{% block content %}
+<h4 class="mb-4">Dashboard</h4>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="card stat-card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="text-muted small">Today's Sales</div>
+                <div class="h4 mb-0">{{ today_sales | inr }}</div>
+                <div class="text-muted small">{{ today_bill_count }} bill(s)</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card stat-card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="text-muted small">This Month</div>
+                <div class="h4 mb-0">{{ month_sales | inr }}</div>
+                <div class="text-muted small">{{ month_bill_count }} bill(s)</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card stat-card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="text-muted small">Total Products</div>
+                <div class="h4 mb-0">{{ total_products }}</div>
+                <div class="text-muted small">in inventory</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card stat-card border-0 shadow-sm h-100 {% if low_stock_products %}border-warning{% endif %}">
+            <div class="card-body">
+                <div class="text-muted small">Low Stock Alerts</div>
+                <div class="h4 mb-0 {% if low_stock_products %}text-warning{% endif %}">{{ low_stock_products|length }}</div>
+                <div class="text-muted small">item(s) need restock</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <h6 class="card-title mb-3">Sales - Last 14 Days</h6>
+                <canvas id="salesChart" height="110"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <h6 class="card-title mb-3"><i class="bi bi-exclamation-triangle text-warning"></i> Low Stock Items</h6>
+                {% if low_stock_products %}
+                <ul class="list-group list-group-flush">
+                    {% for v in low_stock_products %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                        <span>{{ v.display_name }}</span>
+                        <span class="badge bg-warning text-dark">{{ v.stock_qty }} {{ v.product.unit }} left</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="text-muted small mb-0">All products are sufficiently stocked.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mt-1">
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <h6 class="card-title mb-3"><i class="bi bi-graph-up-arrow text-success"></i> Profit / Loss — Today</h6>
+                <div class="d-flex justify-content-between"><span class="text-muted">Sales</span><span>{{ today_pl.sales | inr }}</span></div>
+                <div class="d-flex justify-content-between"><span class="text-muted">Expenses</span><span class="text-danger">- {{ today_pl.expenses | inr }}</span></div>
+                <hr>
+                <div class="d-flex justify-content-between fs-5 fw-semibold">
+                    <span>Net</span>
+                    <span class="{% if today_pl.profit >= 0 %}text-success{% else %}text-danger{% endif %}">{{ today_pl.profit | inr }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <h6 class="card-title mb-3"><i class="bi bi-graph-up-arrow text-success"></i> Profit / Loss — This Month</h6>
+                <div class="d-flex justify-content-between"><span class="text-muted">Sales</span><span>{{ month_pl.sales | inr }}</span></div>
+                <div class="d-flex justify-content-between"><span class="text-muted">Expenses</span><span class="text-danger">- {{ month_pl.expenses | inr }}</span></div>
+                <hr>
+                <div class="d-flex justify-content-between fs-5 fw-semibold">
+                    <span>Net</span>
+                    <span class="{% if month_pl.profit >= 0 %}text-success{% else %}text-danger{% endif %}">{{ month_pl.profit | inr }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mt-1">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title mb-3"><i class="bi bi-trophy text-success"></i> Top Selling Products (This Month)</h6>
+                {% if top_products %}
+                <div class="table-responsive">
+                    <table class="table table-sm mb-0">
+                        <thead><tr><th>Product</th><th class="text-end">Units Sold</th></tr></thead>
+                        <tbody>
+                        {% for name, qty in top_products %}
+                            <tr><td>{{ name }}</td><td class="text-end">{{ qty }}</td></tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted small mb-0">No sales recorded yet this month.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<script>
+fetch("{{ url_for('dashboard.sales_chart_data') }}")
+    .then(res => res.json())
+    .then(data => {
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: 'Sales (₹)',
+                    data: data.data,
+                    borderColor: '#E2A73E',
+                    backgroundColor: 'rgba(226, 167, 62, 0.12)',
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 3,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+    });
+</script>
+{% endblock %}

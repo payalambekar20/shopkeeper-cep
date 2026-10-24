@@ -1,0 +1,320 @@
+/* ============================================================================
+   SHOPKEEPER — VISUAL IDENTITY
+   ----------------------------------------------------------------------------
+   Deep indigo for structure and trust, warm marigold as the one accent color
+   (used sparingly — buttons and key numbers only). Inspired by shop ledgers
+   and marketplace signage rather than generic SaaS dashboards. Numbers are
+   the hero: confident, legible typography for money and stock counts, since
+   that's what a shopkeeper scans first.
+   ========================================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+    --ink: #1B2A41;          /* deep indigo — headers, nav, primary structure */
+    --ink-light: #2D4162;
+    --marigold: #E2A73E;     /* the one accent — buttons, key numbers, highlights */
+    --marigold-dark: #C98E28;
+    --paper: #F4F6F8;        /* cool off-white background, not generic cream */
+    --card: #FFFFFF;
+    --ledger-green: #2E7D4F; /* profit / positive */
+    --ledger-red: #B8472E;   /* loss / alerts, muted brick, not stock red */
+    --text-muted: #5B6B82;
+    --border-soft: #E4E8ED;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--paper);
+    font-family: 'Inter', -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+}
+
+h1, h2, h3, h4, h5, h6, .card-title, .navbar-brand {
+    font-family: 'Manrope', 'Inter', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+/* ---------------------------------------------------------------------------
+   NAVBAR
+   ------------------------------------------------------------------------- */
+.app-navbar {
+    background-color: var(--ink);
+    padding-top: 0.65rem;
+    padding-bottom: 0.65rem;
+    box-shadow: 0 2px 10px rgba(27, 42, 65, 0.15);
+}
+
+.navbar-brand {
+    font-weight: 800;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.navbar-brand .brand-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    background: var(--marigold);
+    color: var(--ink);
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+.navbar-nav .nav-link {
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.78) !important;
+    padding: 0.5rem 0.9rem !important;
+    border-radius: 8px;
+    transition: background-color 0.15s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #fff !important;
+}
+
+.navbar-nav .nav-link.active {
+    background-color: var(--marigold);
+    color: var(--ink) !important;
+    font-weight: 700;
+    border-bottom: none;
+}
+
+/* ---------------------------------------------------------------------------
+   BUTTONS — pill-shaped primary actions, feels tactile and intentional
+   ------------------------------------------------------------------------- */
+.btn {
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+}
+
+.btn-primary {
+    background-color: var(--marigold);
+    border-color: var(--marigold);
+    color: var(--ink);
+    border-radius: 999px;
+    padding-left: 1.3rem;
+    padding-right: 1.3rem;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: var(--marigold-dark);
+    border-color: var(--marigold-dark);
+    color: var(--ink);
+}
+
+.btn-success {
+    background-color: var(--ledger-green);
+    border-color: var(--ledger-green);
+    border-radius: 999px;
+}
+
+.btn-outline-secondary, .btn-outline-primary, .btn-outline-danger, .btn-outline-warning {
+    border-radius: 999px;
+}
+
+/* ---------------------------------------------------------------------------
+   CARDS — sharp-ish, intentional radius, soft indigo-tinted shadow
+   (not the generic flat grey rgba(0,0,0,.1) every AI dashboard uses)
+   ------------------------------------------------------------------------- */
+.card {
+    border-radius: 12px;
+    border: 1px solid var(--border-soft);
+    box-shadow: 0 2px 14px rgba(27, 42, 65, 0.06);
+}
+
+/* Stat cards: colored left accent bar instead of icon-in-circle cliché */
+.stat-card {
+    border-radius: 10px;
+    border-left: 4px solid var(--marigold);
+    position: relative;
+}
+
+.stat-card .h4 {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+    font-size: 1.6rem;
+}
+
+.stat-card.border-warning {
+    border-left-color: var(--ledger-red) !important;
+}
+
+/* ---------------------------------------------------------------------------
+   AUTH PAGES — split panel: bold indigo brand side + form side
+   ------------------------------------------------------------------------- */
+.login-wrapper {
+    min-height: calc(100vh - 2rem);
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    margin: -1.5rem -0.75rem;
+}
+
+.auth-split {
+    display: flex;
+    width: 100%;
+    max-width: 920px;
+    margin: auto;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(27, 42, 65, 0.18);
+    min-height: 560px;
+}
+
+.auth-brand-panel {
+    flex: 1 1 42%;
+    background: linear-gradient(160deg, var(--ink) 0%, var(--ink-light) 100%);
+    color: #fff;
+    padding: 3rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.auth-brand-panel .brand-title {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+    font-size: 1.6rem;
+}
+
+.auth-brand-panel .brand-tag {
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.95rem;
+    margin-top: 0.35rem;
+}
+
+.auth-brand-panel .store-illustration {
+    width: 100%;
+    max-width: 280px;
+    margin: 1.5rem auto;
+}
+
+.auth-brand-panel .brand-footer {
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 0.8rem;
+}
+
+.auth-form-panel {
+    flex: 1 1 58%;
+    background: var(--card);
+    padding: 3rem 2.75rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+@media (max-width: 767px) {
+    .auth-split {
+        flex-direction: column;
+        min-height: unset;
+    }
+    .auth-brand-panel {
+        padding: 2rem;
+    }
+    .auth-brand-panel .store-illustration {
+        max-width: 160px;
+        margin: 1rem auto;
+    }
+    .login-wrapper {
+        margin: -1rem -0.5rem;
+    }
+}
+
+/* ---------------------------------------------------------------------------
+   FORMS
+   ------------------------------------------------------------------------- */
+.form-control, .form-select {
+    border-radius: 8px;
+    border-color: var(--border-soft);
+    padding: 0.55rem 0.8rem;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--marigold);
+    box-shadow: 0 0 0 0.2rem rgba(226, 167, 62, 0.2);
+}
+
+.form-label {
+    font-weight: 600;
+    font-size: 0.88rem;
+    color: var(--ink);
+}
+
+/* ---------------------------------------------------------------------------
+   TABLES — sharp corners, data-density first (not rounded-card-ified)
+   ------------------------------------------------------------------------- */
+.table thead th {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 0.82rem;
+    text-transform: none;
+    color: var(--text-muted);
+    border-bottom: 2px solid var(--border-soft);
+    background-color: #FAFBFC;
+}
+
+.table td, .table th {
+    vertical-align: middle;
+}
+
+/* Money figures get the Manrope treatment wherever they appear in tables */
+.table .text-end {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+}
+
+/* ---------------------------------------------------------------------------
+   SEARCH / BILLING
+   ------------------------------------------------------------------------- */
+.search-results {
+    max-height: 260px;
+    overflow-y: auto;
+    border-radius: 10px;
+}
+
+.search-results .list-group-item {
+    cursor: pointer;
+    border-color: var(--border-soft);
+}
+
+.search-results .list-group-item:hover {
+    background-color: #FFF8EB;
+}
+
+/* ---------------------------------------------------------------------------
+   RECEIPT
+   ------------------------------------------------------------------------- */
+.receipt-card {
+    border-radius: 12px;
+}
+
+.receipt-table th {
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+/* ---------------------------------------------------------------------------
+   PRINT
+   ------------------------------------------------------------------------- */
+@media print {
+    .no-print, nav, .navbar {
+        display: none !important;
+    }
+    body {
+        background: #fff;
+    }
+    .card {
+        border: none !important;
+        box-shadow: none !important;
+    }
+}
